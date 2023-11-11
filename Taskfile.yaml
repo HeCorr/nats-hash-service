@@ -9,6 +9,9 @@ tasks:
   build:
     cmds:
       - go build -o ./bin/nats-hash-svc.exe ./cmd
+  build-linux:
+    cmds:
+      - GOOS=linux GOARCH=amd64 go build -o ./bin/nats-hash-svc ./cmd
   exec:
     cmds:
       - ./bin/nats-hash-svc.exe
