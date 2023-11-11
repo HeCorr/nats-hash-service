@@ -16,32 +16,28 @@ func main() {
 		Description: "Hashes input data into md5, sha1, sha256, sha512 or blake2b (256-bit). Output is Hexadecimal. Example: `nats req hash.md5 'hello'`.",
 	})
 	if err != nil {
-		panic(err)
-	}
-
-	hashGroup := svc.AddGroup("hash")
-
-	if err = hashGroup.AddEndpoint("md5", micro.HandlerFunc(md5Handler)); err != nil {
-		panic(err)
-	}
-
-	if err = hashGroup.AddEndpoint("sha1", micro.HandlerFunc(sha1Handler)); err != nil {
-		panic(err)
-	}
-
-	if err = hashGroup.AddEndpoint("sha256", micro.HandlerFunc(sha256Handler)); err != nil {
-		panic(err)
-	}
-
-	if err = hashGroup.AddEndpoint("sha512", micro.HandlerFunc(sha512Handler)); err != nil {
-		panic(err)
-	}
-
-	if err = hashGroup.AddEndpoint("blake2b", micro.HandlerFunc(blake2bHandler)); err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	log.Println("Connected.")
+
+	hashGroup := svc.AddGroup("hash")
+
+	handlers := map[string]micro.Handler{
+		"md5":     micro.HandlerFunc(md5Handler),
+		"sha1":    micro.HandlerFunc(sha1Handler),
+		"sha256":  micro.HandlerFunc(sha256Handler),
+		"sha512":  micro.HandlerFunc(sha512Handler),
+		"blake2b": micro.HandlerFunc(blake2bHandler),
+	}
+
+	for e, h := range handlers {
+		if err = hashGroup.AddEndpoint(e, h); err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	log.Println("Registered endpoints.")
 
 	select {}
 }
