@@ -1,11 +1,19 @@
 package main
 
 import (
+	"flag"
 	"log"
 
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/micro"
 )
+
+var quiet bool
+
+func init() {
+	flag.BoolVar(&quiet, "q", false, "Quiet - don't print inputs and outputs (still prints startup status)")
+	flag.Parse()
+}
 
 func main() {
 	nc, _ := nats.Connect("nats://demo.nats.io:4222")

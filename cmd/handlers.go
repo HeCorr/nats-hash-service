@@ -13,7 +13,9 @@ func sumHash(hash crypto.Hash, input []byte) []byte {
 	h.Write(input)
 	output := make([]byte, hex.EncodedLen(len(h.Sum(nil))))
 	hex.Encode(output, h.Sum(nil))
-	log.Printf("'%s' -[%s]-> %s", input, hash, output)
+	if !quiet {
+		log.Printf("'%s' -[%s]-> %s", input, hash, output)
+	}
 	return output
 }
 
